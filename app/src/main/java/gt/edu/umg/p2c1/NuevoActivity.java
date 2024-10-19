@@ -1,5 +1,6 @@
 package gt.edu.umg.p2c1;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +17,9 @@ import gt.edu.umg.p2c1.BaseDatos.DbHelper;
 public class NuevoActivity extends AppCompatActivity {
 
     EditText txtNombre, txtTelefono, txtEmail;
-    Button btnGuardar;
+    Button btnGuardar, btn_regresar;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,7 @@ public class NuevoActivity extends AppCompatActivity {
         txtTelefono = findViewById(R.id.txtTelefono);
         txtEmail = findViewById(R.id.txtEmail);
         btnGuardar = findViewById(R.id.btnGuardar);
+        btn_regresar = findViewById(R.id.btn_regresar);
 
         // Instanciar DbHelper
         DbHelper dbHelper = new DbHelper(this);
@@ -56,6 +59,12 @@ public class NuevoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al guardar el contacto", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        //Boton para regresar
+
+        btn_regresar.setOnClickListener(v-> {
+            finish();
         });
 
         // Ajustar los insets de la ventana

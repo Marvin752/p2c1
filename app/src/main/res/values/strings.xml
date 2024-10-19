@@ -9,4 +9,6 @@
     <string name="btnGuardar">Guardar</string>
     <string name="btnCrearRegistro">Crear Registro</string>
     <string name="btnCrearDB">Crear Base de Datos</string>
+    <string name="tvDatosPersonales">Marvin Alexander Cámbara Alonzo 0905-23-17848</string>
+    <string name="btn_regresar">Regrear al Main</string>
 </resources>

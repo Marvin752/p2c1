@@ -12,13 +12,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
+import gt.edu.umg.p2c1.BaseDatos.DbContactos;
 import gt.edu.umg.p2c1.BaseDatos.DbHelper;
+import gt.edu.umg.p2c1.BaseDatos.entidades.Contactos;
+import gt.edu.umg.p2c1.adaptadores.ListaContactosAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btnSaludo, btnCrearDb, btnCrearRegistro;
     TextView tvSaludo;
+    RecyclerView listaContactos;
+    ArrayList<Contactos> listaArrayContactos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,46 +35,50 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //Codigo nuevo
+        // Asignación de vistas
         btnSaludo = findViewById(R.id.btnSaludo);
         tvSaludo = findViewById(R.id.tvSaludo);
         btnCrearDb = findViewById(R.id.btnCrearDb);
         btnCrearRegistro = findViewById(R.id.btnCrearRegistro);
+        listaContactos = findViewById(R.id.listaContactos);
 
-        //Crear db
+        // Configuración del RecyclerView
+        listaContactos.setLayoutManager(new LinearLayoutManager(this));
 
-        btnCrearDb.setOnClickListener(v ->{
+        // Cargar contactos de la base de datos
+        DbContactos dbContactos = new DbContactos(this);
+        listaArrayContactos = dbContactos.mostrarContactos(); // Obtén los contactos
+        ListaContactosAdapter adapter = new ListaContactosAdapter(listaArrayContactos);
+        listaContactos.setAdapter(adapter);
 
-            //Crear base de datos
-
+        // Crear la base de datos
+        btnCrearDb.setOnClickListener(v -> {
             DbHelper dbHelper = new DbHelper(this);
-            dbHelper.getWritableDatabase();
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-            if(db != null)
-            {
-                Toast.makeText(this,"Creando base de datos", Toast.LENGTH_SHORT).show();
+            if (db != null) {
+                Toast.makeText(this, "Creando base de datos", Toast.LENGTH_SHORT).show();
                 tvSaludo.setText("Creando base de datos");
-            }else{
-                Toast.makeText(this,"Error al crear base de datos", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Error al crear base de datos", Toast.LENGTH_SHORT).show();
                 tvSaludo.setText("Error al crear base de datos");
             }
         });
 
-        //crear registro llama a la activity NuevoActivity FALTA CREAR Y REFERENCIAR EL BOTON
-        
+        // Crear registro - Navegar a NuevoActivity
         btnCrearRegistro.setOnClickListener(v -> {
             Toast.makeText(this, "Creando Registro", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, NuevoActivity.class);
             startActivity(intent);
-
         });
 
-        btnSaludo.setOnClickListener(v ->{
-            Toast.makeText(this,"Aviso Marvin", Toast.LENGTH_SHORT).show();
+        // Mostrar saludo
+        btnSaludo.setOnClickListener(v -> {
+            Toast.makeText(this, "Aviso Marvin", Toast.LENGTH_SHORT).show();
             tvSaludo.setText("Hola Marvin");
         });
 
+        // Aplicar los insets de sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
